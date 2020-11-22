@@ -2,14 +2,16 @@ package Client;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Client {
 
+
     private int ID;
     private Scanner in;
-    private PrintWriter out;
-    private Socket socket;
+    private PrintWriter printWriter;
+    protected Socket socket;
 
     //Constructor
     public Client() throws IOException{
@@ -47,7 +49,7 @@ public class Client {
     private void connect() throws IOException {
         this.socket = new Socket("localhost", 8888);
         OutputStream output = socket.getOutputStream();
-        this.out = new PrintWriter(output, true);
+        this.printWriter = new PrintWriter(output, true);
         this.in = new Scanner(new InputStreamReader(socket.getInputStream()));
     }
 
@@ -72,12 +74,19 @@ public class Client {
     }
 
     public void sendCommand(String cmd){
-        out.println(cmd);
+        printWriter.println(cmd);
     }
 
     public String recieveMessage(){
 
-        String message = in.nextLine();
+        String message = "";
+        try{
+            message = in.nextLine();
+        }catch (NoSuchElementException e){
+            System.out.println("Connection with the server has been lost");
+            System.exit(606);
+        }
+
 
         return message;
     }
