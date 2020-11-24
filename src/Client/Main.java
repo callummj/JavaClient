@@ -6,51 +6,57 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) {
-        Client a = null;
+        Client client = null;
         try {
-            a = new Client();
-            new Thread(new ConnectionChecker(a.socket)).start();
+            client = new Client();
+            new Thread(new ConnectionChecker(client.socket)).start();
         }catch(IOException e){
             System.out.println("Error connecting to the server.");
             System.exit(606);
         }
 
+        System.out.println("main thread: " + Thread.currentThread().getId());
+
+        new Thread(new GUI(client)).start();
+
+
         Scanner scan = new Scanner(System.in);
         boolean running = true;
 
-        System.out.println("Successfully connected to market with ID: " + a.getID() + ". Type 'help' for list of commands.");
+        System.out.println("Successfully connected to market with ID: " + client.getID() + ". Type 'help' for list of commands.");
         while(running){
             System.out.print("> ");
             if (scan.hasNext()) {
+                System.out.print("> ");
                 String input = scan.nextLine();
                 switch (input) {
                     case "balance":
-                        a.sendCommand("balance");
-
-                        System.out.println("Balance: " + a.recieveMessage());
+                        client.sendCommand("balance");
+                        System.out.println("Balance: " + client.recieveMessage());
                         break;
                     case "buy":
-                        a.sendCommand("buy");
-                        System.out.println(a.recieveMessage());
+                        client.sendCommand("buy");
+                        System.out.println(client.recieveMessage());
                         break;
                     case "sell":
                         System.out.println("sell");
-                        a.sendCommand("sell");
+                        client.sendCommand("sell");
                         break;
                     case "quit":
-                        a.sendCommand("quit");
+                        client.sendCommand("quit");
                         System.out.println("Disconnecting from server...");
                         System.exit(1);
                         break;
                     case "help":
-                        System.out.println("Available commands:\n>balance\n>sell\n>status\n>connections");
+                        System.out.println("Available commands:\n> balance\n> sell\n> status\n> connections");
                         break;
                     case "status":
-                        a.sendCommand("status");
-                        System.out.println(a.recieveMessage());
+                        client.sendCommand("status");
+                        System.out.println(client.recieveMessage());
                         break;
                     case "connections":
-                        System.out.println("connections");
+                        client.sendCommand("connections");
+                        System.out.println(client.recieveMessage());
                         break;
                     default:
                         System.out.println("Invalid command, type 'help' for a list of all commands.");
@@ -59,5 +65,7 @@ public class Main {
         }
 
     }
+
+
 
 }

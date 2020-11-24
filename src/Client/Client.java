@@ -8,7 +8,7 @@ import java.util.Scanner;
 public class Client {
 
 
-    private int ID;
+    private String ID;
     private Scanner in;
     private PrintWriter printWriter;
     protected Socket socket;
@@ -32,7 +32,7 @@ public class Client {
         }else{
             sendCommand(idStr);
         }
-        this.ID = Integer.parseInt(idStr);
+        this.ID = idStr;
     }
 
     //Private methods
@@ -69,7 +69,7 @@ public class Client {
 
     //public methdods
 
-    public int getID(){
+    public String getID(){
         return this.ID;
     }
 
