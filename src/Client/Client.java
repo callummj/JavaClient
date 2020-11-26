@@ -9,7 +9,7 @@ public class Client {
 
 
     private String ID;
-    private Scanner in;
+    public Scanner in;
     private PrintWriter printWriter;
     protected Socket socket;
 
@@ -22,29 +22,12 @@ public class Client {
             System.exit(606);
         }
 
-        String idStr = getLastConnection();
+        sendCommand("new connection");
+        String idStr = recieveMessage();
 
-
-        if (idStr.equals("No data found")){
-            sendCommand("new connection"); //See Server
-            idStr = recieveMessage();
-            saveData(idStr);
-        }else{
-            sendCommand(idStr);
-        }
         this.ID = idStr;
     }
 
-    //Private methods
-    private void saveData(String userID){
-        try {
-            FileWriter myWriter = new FileWriter("userdata.txt");
-            myWriter.write(userID);
-            myWriter.close();
-        } catch (IOException e) {
-            System.out.println("Error creating save data");
-        }
-    }
 
     private void connect() throws IOException {
         this.socket = new Socket("localhost", 8888);
@@ -53,19 +36,6 @@ public class Client {
         this.in = new Scanner(new InputStreamReader(socket.getInputStream()));
     }
 
-    private String getLastConnection(){
-        File userdata;
-        userdata = new File("userdata.txt");
-        Scanner userDataReader = null;
-        try {
-            userDataReader = new Scanner(userdata);
-        } catch (FileNotFoundException e) {
-            return "No data found";
-        }
-        String data = userDataReader.nextLine();
-        userDataReader.close();
-        return data;
-    }
 
     //public methdods
 
@@ -73,18 +43,31 @@ public class Client {
         return this.ID;
     }
 
+    public Socket getSocket(){return this.socket;}
+    public Scanner getScanner(){
+        return this.in;
+    }
+
     public void sendCommand(String cmd){
         printWriter.println(cmd);
     }
 
+
+    //recieve specific message
     public String recieveMessage(){
+
+        System.out.println("start recieve message");
 
         String message = "";
         try{
+
             message = in.nextLine();
-        }catch (NoSuchElementException | IndexOutOfBoundsException e){
+
+        }catch (NoSuchElementException e){
             System.out.println("Connection with the server has been lost");
             System.exit(606);
+        }catch (IndexOutOfBoundsException e){
+            System.out.println("index out of bounds");
         }
 
 
