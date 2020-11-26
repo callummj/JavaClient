@@ -24,8 +24,7 @@ public class Main {
         }
 
         System.out.println("main thread: " + Thread.currentThread().getId());
-
-//        new Thread(new GUI(client)).start();
+        //new Thread(new GUI(client)).start();
 
         new Thread(new InputThread(client)).start();
 

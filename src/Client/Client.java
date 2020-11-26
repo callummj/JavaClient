@@ -21,10 +21,10 @@ public class Client {
             System.out.println("Error establishing connection to the server");
             System.exit(606);
         }
-
         sendCommand("new connection");
         String idStr = recieveMessage();
-
+        System.out.println("here");
+        idStr = idStr.replace("[ID]", "");
         this.ID = idStr;
     }
 
@@ -56,7 +56,6 @@ public class Client {
     //recieve specific message
     public String recieveMessage(){
 
-        System.out.println("start recieve message");
 
         String message = "";
         try{

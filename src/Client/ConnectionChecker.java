@@ -49,6 +49,17 @@ public class ConnectionChecker implements Runnable{
             try{
                 os.write('o');
             }catch (IOException e){
+
+                for (int i = 0; i < 5; i++){
+                    System.out.println("here");
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
+                    client.sendCommand("reconnection");
+                    client.sendCommand(client.getID());
+                }
                 System.out.println("Error: the server has been lost.");
                 System.exit(606);
             }

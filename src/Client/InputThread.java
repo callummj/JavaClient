@@ -36,17 +36,28 @@ public class InputThread implements Runnable {
         System.out.println("update client");
     }
 
+    //Removes the command part from message which is used by the program to know what to do with the command.
+    private String trimString(String string, String toRemove){
+        return string.replace(toRemove, "");
+    }
+
     private void handleResponse(String message){
 
         if (message.startsWith("[UPDATE]")) {
             //updateClientMethod()
-            System.out.println("Update: " + message);
-            message = "";
+            message = trimString(message, "[UPDATE]");
+            System.out.println(message);
+
         }else if (message.startsWith("[CONN]")){ //Connection/Disconnecitons
+            message = trimString(message, "[CONN]");
             System.out.println("Connection:" + message);
+
         }else if (message.startsWith("[MARKET]")){ //
+            message = trimString(message, "[MARKET]");
             System.out.println("Market: " + message);
+
         }else if (message.startsWith("[WARNING]")){
+            message = trimString(message, "[WARNING]");
             System.out.println("Warning: " + message);
         }
         System.out.print("> ");
