@@ -87,15 +87,15 @@ public class GUI implements Runnable, ActionListener {
             public void actionPerformed(ActionEvent evt) {
 
 
-                // Create a new Thread to do the counting
+                //TODO may have to make this synchronised etc if errors arise. or t.Run() rather than running constantly
                 Thread t = new Thread() {
                     @Override
                     public void run() {  // override the run() for the running behaviors
                         client.sendCommand("buy");
-                        System.out.println(client.recieveMessage());
+                        System.out.println(">" + client.recieveMessage());
                     }
                 };
-                t.start();  // call back run()
+                t.run();  // call back run()
             }
 
         });
@@ -137,7 +137,6 @@ public class GUI implements Runnable, ActionListener {
         ta.setEditable(false);
         client.sendCommand("connections");
         String result = client.recieveMessage();
-        System.out.println(result);
 
         if (result.startsWith("[UPDATE]")){
             ArrayList<String> connectionsArray = connectionsToArray(result);

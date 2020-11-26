@@ -82,7 +82,7 @@ public class Client {
         String message = "";
         try{
             message = in.nextLine();
-        }catch (NoSuchElementException e){
+        }catch (NoSuchElementException | IndexOutOfBoundsException e){
             System.out.println("Connection with the server has been lost");
             System.exit(606);
         }
