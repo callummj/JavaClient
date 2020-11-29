@@ -23,13 +23,13 @@ public class Client {
         }
         sendCommand("new connection");
         String idStr = recieveMessage();
-        System.out.println("here");
         idStr = idStr.replace("[ID]", "");
+        idStr = idStr.replace(" ", "");
         this.ID = idStr;
     }
 
 
-    private void connect() throws IOException {
+    protected void connect() throws IOException {
         this.socket = new Socket("localhost", 8888);
         OutputStream output = socket.getOutputStream();
         this.printWriter = new PrintWriter(output, true);

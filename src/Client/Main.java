@@ -23,15 +23,16 @@ public class Main {
             System.exit(606);
         }
 
-        System.out.println("main thread: " + Thread.currentThread().getId());
+
         //new Thread(new GUI(client)).start();
+
 
         new Thread(new InputThread(client)).start();
 
         Scanner scan = new Scanner(System.in);
         boolean running = true;
 
-        System.out.println("Successfully connected to market with ID: " + client.getID() + ". Type 'help' for list of commands.");
+        System.out.println("Successfully connected to market."+ "\nType 'help' for list of commands.");
         while(running){
             System.out.print("> ");
             if (scan.hasNext()) {
@@ -50,15 +51,13 @@ public class Main {
                         break;
                     case "sell":
                         System.out.println("Enter an ID of who you would like to sell to: ");
-                        boolean clientAccepted = false;
 
                         int recipient;
                         recipient = scan.nextInt();
-
+                        scan.nextLine();
 
                         client.sendCommand("sell");
                         client.sendCommand(String.valueOf(recipient));
-                        //response(client);
                         break;
                     case "quit":
                         client.sendCommand("quit");
@@ -79,30 +78,18 @@ public class Main {
                         //response(client);
                         break;
                     default:
+                        System.out.println("Illegal command entered: " + input + " with size: " + input.length());
                         System.out.println("Invalid command, type 'help' for a list of all commands.");
                 }
             }
         }
 
+
     }
 
-    /*
-    private static void response(Client client){
-        System.out.println("here2");
-        Scanner scan = client.getScanner(); //more readable
-        String message = "";
-        boolean gettingStream = true;
-        while (gettingStream){
-            if (scan.hasNextLine()){
-                System.out.println("has next line");
-                message += scan.nextLine();
-            }else{
-                gettingStream = false;
-            }
-        }
-
-        System.out.println("Message: " + message);
-    }*/
-
+    protected static void restartInputThread(Client client){
+        System.out.println("restarting input thread");
+        new Thread(new InputThread(client)).start();
+    }
 
 }

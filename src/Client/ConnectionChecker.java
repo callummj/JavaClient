@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 import java.io.PrintWriter;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 
 
@@ -39,7 +40,6 @@ public class ConnectionChecker implements Runnable{
     //Writes the character 'o' to the output stream which is sent to the server to see if the server is still available.
     @Override
     public void run() {
-        System.out.println("conn checker: " + Thread.currentThread().getId());
         while(this.running){
             try {
                 Thread.sleep(5000); //Ping the server every 5 seconds to check that the connection is still alive.
@@ -47,21 +47,46 @@ public class ConnectionChecker implements Runnable{
                 e.printStackTrace();
             }
             try{
-                os.write('o');
+                os.flush();
+                os.write('@');
             }catch (IOException e){
-
+                boolean reconnected = false;
                 for (int i = 0; i < 5; i++){
-                    System.out.println("here");
                     try {
-                        Thread.sleep(5000);
+                        Thread.sleep(5000); //Timer between attempts to establish a reconnection
                     } catch (InterruptedException interruptedException) {
                         interruptedException.printStackTrace();
                     }
-                    client.sendCommand("reconnection");
-                    client.sendCommand(client.getID());
+                    reconnected = false;
+                    try{
+                        client.connect();
+                        this.socket = client.getSocket();
+                        reconnected = true; //TODO reconnection: TEST: run server, connect as client, then restart server.
+                        try {
+                            this.os = socket.getOutputStream();
+                        } catch (IOException error) {
+                            e.printStackTrace();
+                        }
+                    }catch (IOException reconnectionError){
+                        reconnected = false;
+                    }
+
+                    if (reconnected){
+                        System.out.println("Connected: " + reconnected);
+                        i = 10;
+                        client.sendCommand("reconnection");
+                        System.out.println("sending recon id:" + client.getID());
+                        client.sendCommand(client.getID());
+                    }
+
                 }
-                System.out.println("Error: the server has been lost.");
-                System.exit(606);
+                System.out.println("Connection reastablished.");
+                Main.restartInputThread(client);
+                if(!reconnected){
+                    System.out.println("Error: the server has been lost.");
+                    System.exit(606);
+                }
+
             }
             try {
                 os.flush();
@@ -92,3 +117,21 @@ public class ConnectionChecker implements Runnable{
         }
     }
 }
+
+ /*
+                    try {
+                        reader.readLine();
+                        connectionLost = false;
+                    } catch (IOException e) {
+                        connectionLost = true;
+                    }
+                    try {
+                        Thread.sleep(5000);
+                    } catch (InterruptedException interruptedException) {
+                        interruptedException.printStackTrace();
+                    }
+                }
+                if (connectionLost) {
+                    System.out.println("Connection with the server lost.");
+                    System.exit(606);
+                }*/

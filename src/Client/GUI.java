@@ -176,7 +176,6 @@ public class GUI implements Runnable, ActionListener {
 
     }
 
-//TODO Put gui on thread.
 
 
     @Override
