@@ -48,7 +48,8 @@ public class ConnectionChecker implements Runnable{
             }
             try{
                 os.flush();
-                os.write('@');
+                char pingMsg = '@';
+                os.write(pingMsg);
             }catch (IOException e){
                 boolean reconnected = false;
                 for (int i = 0; i < 5; i++){
@@ -81,11 +82,12 @@ public class ConnectionChecker implements Runnable{
 
                 }
                 System.out.println("Connection reastablished.");
-                Main.restartInputThread(client);
+
                 if(!reconnected){
                     System.out.println("Error: the server has been lost.");
                     System.exit(606);
                 }
+                Main.restartInputThread(client);
 
             }
             try {

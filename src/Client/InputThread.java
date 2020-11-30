@@ -16,7 +16,6 @@ public class InputThread implements Runnable {
 
     private Socket socket;
     private Client client;
-    private ArrayList<String> messageBuffer;
 
 
     public InputThread(Client client) {
@@ -30,12 +29,8 @@ public class InputThread implements Runnable {
             e.printStackTrace();
         }
         reader = new BufferedReader(new InputStreamReader(input));
-        this.messageBuffer = new ArrayList<String>();
     }
 
-    private void updateReader(String command) {
-        System.out.println("update client");
-    }
 
     //Removes the command part from message which is used by the program to know what to do with the command.
     private String trimString(String string, String toRemove){
