@@ -138,7 +138,7 @@ public class GUI implements Runnable, ActionListener {
         client.sendCommand("connections");
         String result = client.recieveMessage();
 
-        if (result.startsWith("[UPDATE]")){
+        if (result.startsWith("[CONN]")){
             ArrayList<String> connectionsArray = connectionsToArray(result);
             String connectionsOutputResult = "Online Traders ID:\n";
             for (int i = 0; i < connectionsArray.size(); i++){

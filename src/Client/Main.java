@@ -32,7 +32,7 @@ public class Main {
         Scanner scan = new Scanner(System.in);
         boolean running = true;
 
-        System.out.println("Successfully connected to market."+ "\nType 'help' for list of commands.");
+        System.out.println("Successfully connected to market with ID "+ client.getID() + "\nType 'help' for list of commands.");
         while(running){
             System.out.print("> ");
             if (scan.hasNext()) {
@@ -50,11 +50,27 @@ public class Main {
                         //response(client);
                         break;
                     case "sell":
-                        System.out.println("Enter an ID of who you would like to sell to: ");
+                        boolean gettingReciptID = true;
+                        int recipient = 0;
+                        while (gettingReciptID){
+                            System.out.println("Enter an ID of who you would like to sell to: ");
 
-                        int recipient;
-                        recipient = scan.nextInt();
-                        scan.nextLine();
+                            try {
+                                recipient = scan.nextInt();
+                                gettingReciptID = false;
+                            }catch (InputMismatchException e){
+                                System.out.println("Please enter a valid user ID");
+                                gettingReciptID = true;
+                            }
+                            scan.nextLine();
+
+                            String recipientStr = String.valueOf(recipient);
+                            if (recipientStr.equals(client.getID())){
+                                System.out.println("You can't sell the stock to yourself");
+                            }else {
+                                gettingReciptID = false;
+                            }
+                        }
 
                         client.sendCommand("sell");
                         client.sendCommand(String.valueOf(recipient));

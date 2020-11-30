@@ -56,8 +56,11 @@ public class InputThread implements Runnable {
             System.out.print("> ");
         }else if (message.startsWith("[NEW_CONN]")){ //
             message = trimString(message, "[NEW_CONN]");
-            System.out.println(message);
-
+            //If new connection isn't the server sending back the client their own conneciton
+            if (!(message.equals("User: " + client.getID() +" has connected to the server"))){
+                System.out.println(message);
+            }
+            System.out.print("> ");
         }else if (message.startsWith("[MARKET]")){ //
             message = trimString(message, "[MARKET]");
             System.out.println("Market: " + message);
@@ -72,7 +75,6 @@ public class InputThread implements Runnable {
     @Override
     public void run() {
         while (true) {
-            System.out.println("input thread ID: " + Thread.currentThread().getId());
             try {
                 String response = reader.readLine();
                 if (response != null){
