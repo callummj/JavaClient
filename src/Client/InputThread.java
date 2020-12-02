@@ -38,36 +38,67 @@ public class InputThread implements Runnable {
     }
 
     private void handleResponse(String message){
+        System.out.println("message 41: " + message);
         if (message.startsWith("[UPDATE]")) {
             //updateClientMethod()
             message = trimString(message, "[UPDATE]");
             System.out.println(message);
+            Main.gui.updateConsole(">" + message);
             System.out.print("> ");
 
-        }else if (message.startsWith("[CONN]")){ //Connection/Disconnecitons
+        }else if (message.startsWith("[CONN]")) { //Connection/Disconnecitons
             message = trimString(message, "[CONN]");
             message = message.replace("[CONN]", "");
 
             StringTokenizer connectionsTokens = new StringTokenizer(message);
-            System.out.println("Connected Clients:");
-            while (connectionsTokens.hasMoreTokens()){
-                System.out.println("ID: " + connectionsTokens.nextToken());
+
+            if (message.endsWith("disconnected")){
+
+                message = message.replace("[CONN] ", "");
+                message = message.replace(" disconnected", "");
+                Main.gui.removeConnection(message);
+            }else{
+                System.out.println("Connected Clients:");
+                Main.gui.updateConsole("Connected Clients");
+                while (connectionsTokens.hasMoreTokens()) {
+                    String nextID = connectionsTokens.nextToken();
+                    if (!(nextID.equals(client.getID()))) {
+                        System.out.println("ID: " + nextID);
+                        Main.gui.updateConsole("ID: " + nextID);
+                        Main.gui.newConnection(nextID);
+                    }
+                }
+                System.out.print("> ");
             }
-            System.out.print("> ");
-        }else if (message.startsWith("[NEW_CONN]")){ //
+
+
+        }else if(message.startsWith("[DISCONN]")){
+            message = message.replace("[DISCONN]", "");
+            Main.gui.removeConnection(message);
+        }
+
+        else if (message.startsWith("[NEW_CONN]")){ //
             message = trimString(message, "[NEW_CONN]");
             //If new connection isn't the server sending back the client their own conneciton
             if (!(message.equals("User: " + client.getID() +" has connected to the server"))){
                 System.out.println(message);
+                Main.gui.updateConsole(">" + message);
+                message = message.replace("User: ", "");
+                message = message.replace(" has connected to the server", "");
+                Main.gui.newConnection(message);
             }
+
             System.out.print("> ");
         }else if (message.startsWith("[MARKET]")){ //
             message = trimString(message, "[MARKET]");
             System.out.println("Market: " + message);
+            Main.gui.updateConsole("> Market: " + message);
 
         }else if (message.startsWith("[WARNING]")){
+            System.out.println("gets here");
             message = trimString(message, "[WARNING]");
-            System.out.println("Warning: " + message);
+            System.out.println("Warning POO: " + message);
+            Main.gui.updateConsole("> Warning: " + message);
             System.out.print("> ");
         }
     }

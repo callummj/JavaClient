@@ -10,6 +10,8 @@ public class Main {
 
     public static ArrayList <String> onlineTraders = new ArrayList<String>();
 
+    public static GUI gui;
+
     public static void main(String[] args) {
 
 
@@ -24,7 +26,9 @@ public class Main {
         }
 
 
-        //new Thread(new GUI(client)).start();
+
+        gui = new GUI(client);
+        new Thread(gui).start();
 
 
         new Thread(new InputThread(client)).start();

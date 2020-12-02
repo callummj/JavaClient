@@ -48,9 +48,10 @@ public class Client {
         return this.in;
     }
 
-    public void sendCommand(String cmd){
+    public synchronized void sendCommand(String cmd){
         printWriter.println(cmd);
     }
+
 
 
     //recieve specific message
